@@ -1,9 +1,5 @@
 package ar.com.ada.api.pagada.entities;
 
-import javax.persistence.*;
-
-@Entity
-@Table
 public class Pais {
 
     public enum TipoIdImpositivoEnum {

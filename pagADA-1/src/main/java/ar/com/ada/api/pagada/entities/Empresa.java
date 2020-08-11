@@ -1,5 +1,7 @@
 package ar.com.ada.api.pagada.entities;
 
+import java.util.*;
+
 import javax.persistence.*;
 
 import ar.com.ada.api.pagada.entities.Pais.TipoIdImpositivoEnum;
@@ -19,6 +21,9 @@ public class Empresa {
     @Column(name = "id_impositivo")
     private String idImpositivo;
     private String nombre;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    private List<Servicio> serviciosQueOfrece = new ArrayList<>();
 
     public Integer getEmpresaId() {
         return empresaId;
@@ -58,6 +63,20 @@ public class Empresa {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public List<Servicio> getServiciosQueOfrece() {
+        return serviciosQueOfrece;
+    }
+
+    public void setServiciosQueOfrece(List<Servicio> serviciosQueOfrece) {
+        this.serviciosQueOfrece = serviciosQueOfrece;
+    }
+
+    // Relacion bidirecional para que los objetos se apunten entre si
+    public void agregarServicio(Servicio servicio) {
+        this.serviciosQueOfrece.add(servicio);
+        servicio.setEmpresa(this);
     }
 
 }
