@@ -19,11 +19,11 @@ public class DeudorService {
         return deudorRepo.findAll();
     }
 
-    public Deudor crearDeudor(Integer deudorId, Integer paisId, TipoIdImpositivoEnum tipoIdImpositivo,
+    public Deudor crearDeudor(Integer paisId, TipoIdImpositivoEnum tipoIdImpositivo,
             String idImpositivo, String nombre) {
         Deudor deudor = new Deudor();
 
-        deudor.setDeudorId(deudorId);
+        
         deudor.setPaisId(paisId);
         deudor.setTipoIdImpositivo(tipoIdImpositivo);
         deudor.setIdImpositivo(idImpositivo);

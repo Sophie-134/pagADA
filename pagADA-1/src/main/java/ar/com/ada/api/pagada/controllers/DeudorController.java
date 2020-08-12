@@ -35,7 +35,7 @@ public class DeudorController {
         GenericResponse gr = new GenericResponse();
 
         // to do: hacer validaciones y crear la empresa a traves del servic
-        Deudor deudor = deudorService.crearDeudor(deudorReq.deudorId, deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo, deudorReq.nombre);
+        Deudor deudor = deudorService.crearDeudor(deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo, deudorReq.nombre);
 
         // O haciendo esto
         // Empresa empresa = empresaService.crearEmpresa(empR.paisId,
@@ -44,7 +44,7 @@ public class DeudorController {
         if (deudor.getDeudorId() != null) {
             gr.isOk = true;
             gr.id = deudor.getDeudorId();
-            gr.message = "Deudor creada con exito";
+            gr.message = "Deudor creado con exito";
             return ResponseEntity.ok(gr);
         }
 
