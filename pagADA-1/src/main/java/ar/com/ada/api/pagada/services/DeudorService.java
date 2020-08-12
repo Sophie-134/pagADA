@@ -19,11 +19,10 @@ public class DeudorService {
         return deudorRepo.findAll();
     }
 
-    public Deudor crearDeudor(Integer paisId, TipoIdImpositivoEnum tipoIdImpositivo,
-            String idImpositivo, String nombre) {
+    public Deudor crearDeudor(Integer paisId, TipoIdImpositivoEnum tipoIdImpositivo, String idImpositivo,
+            String nombre) {
         Deudor deudor = new Deudor();
 
-        
         deudor.setPaisId(paisId);
         deudor.setTipoIdImpositivo(tipoIdImpositivo);
         deudor.setIdImpositivo(idImpositivo);
@@ -32,5 +31,23 @@ public class DeudorService {
         deudorRepo.save(deudor);
         return deudor;
 
+    }
+
+    public DeudorValidacionEnum validarDeudor(Deudor deudor) {
+        if (deudor.getIdImpositivo() == null) {
+            return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
+        }
+        if (!(deudor.getIdImpositivo().length() >= 11 && deudor.getIdImpositivo().length() <= 20)) {
+            return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
+        }
+        if (deudor.getIdImpositivo().chars().filter(c -> !Character.isDigit(c)).count() > 0) {
+            return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
+        }
+
+        return DeudorValidacionEnum.OK;
+    }
+
+    public enum DeudorValidacionEnum {
+        OK, ID_IMPOSITIVO_INVALIDO;
     }
 }

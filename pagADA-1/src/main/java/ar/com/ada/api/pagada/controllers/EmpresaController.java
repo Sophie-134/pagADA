@@ -2,6 +2,7 @@ package ar.com.ada.api.pagada.controllers;
 
 import ar.com.ada.api.pagada.entities.Empresa;
 import ar.com.ada.api.pagada.services.*;
+import ar.com.ada.api.pagada.services.EmpresaService.EmpresaValidacionEnum;
 import ar.com.ada.api.pagada.models.request.EmpresaRequest;
 import ar.com.ada.api.pagada.models.response.*;
 import java.util.List;
@@ -57,6 +58,18 @@ public class EmpresaController {
         emp.setIdImpositivo(empR.idImpositivo);
         emp.setNombre(empR.nombre);
 
+        // Validar(sin Jpa)armar metedo en service
+        // empresaService.validarEmpresa(empR.nombre, empR.idImpositivo);-->esta es mas
+        // espefica, y se tiene q cambiar mucho si mas adelante se quiere modificar
+        // algo.
+        EmpresaValidacionEnum resultadoValidacion = empresaService.validarEmpresa(emp);
+        if (resultadoValidacion != EmpresaValidacionEnum.OK) {
+            gr.isOk = false;
+            gr.message = "No se pudo crear la empresa";
+
+            return ResponseEntity.badRequest().body(gr); // http 400
+
+        }
         empresaService.crearEmpresa(emp);
 
         // O haciendo esto
@@ -69,12 +82,9 @@ public class EmpresaController {
             gr.message = "Empresa creada con exito";
             return ResponseEntity.ok(gr);
         }
-
         gr.isOk = false;
         gr.message = "No se pudo crear la empresa";
 
         return ResponseEntity.badRequest().body(gr); // http 400
-
     }
-
 }

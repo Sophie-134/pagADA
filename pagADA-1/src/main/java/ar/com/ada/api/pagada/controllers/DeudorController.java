@@ -13,10 +13,11 @@ import ar.com.ada.api.pagada.entities.Deudor;
 import ar.com.ada.api.pagada.models.request.DeudorRequest;
 import ar.com.ada.api.pagada.models.response.GenericResponse;
 import ar.com.ada.api.pagada.services.DeudorService;
+import ar.com.ada.api.pagada.services.DeudorService.DeudorValidacionEnum;
 
 @RestController
 public class DeudorController {
-    
+
     @Autowired
     DeudorService deudorService;
 
@@ -30,12 +31,15 @@ public class DeudorController {
         return ResponseEntity.ok(deudores);
 
     }
+
     @PostMapping("/api/deudores")
     public ResponseEntity<GenericResponse> crearEmpresa(@RequestBody DeudorRequest deudorReq) {
         GenericResponse gr = new GenericResponse();
+        Deudor deudor = new Deudor();
 
         // to do: hacer validaciones y crear la empresa a traves del servic
-        Deudor deudor = deudorService.crearDeudor(deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo, deudorReq.nombre);
+        deudorService.crearDeudor(deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo,
+                deudorReq.nombre);
 
         // O haciendo esto
         // Empresa empresa = empresaService.crearEmpresa(empR.paisId,
@@ -49,7 +53,7 @@ public class DeudorController {
         }
 
         gr.isOk = false;
-        gr.message = "No se pudo crear  el deudor";
+        gr.message = "No se pudo crear  el Deudor";
 
         return ResponseEntity.badRequest().body(gr); // http 400
 
