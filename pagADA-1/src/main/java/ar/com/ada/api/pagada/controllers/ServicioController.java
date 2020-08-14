@@ -1,5 +1,8 @@
 package ar.com.ada.api.pagada.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import ar.com.ada.api.pagada.entities.*;
 import ar.com.ada.api.pagada.models.request.ServicioRequest;
@@ -8,8 +11,10 @@ import ar.com.ada.api.pagada.services.*;
 import ar.com.ada.api.pagada.services.ServicioService.ServicioValidacionEnum;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -81,5 +86,33 @@ public class ServicioController {
             return ResponseEntity.ok(genericResponse);
         }
 
+    }
+    /*
+     * 7) Obtener servicios: todos devuelven el formato json Lista de Servicio GET
+     * /api/servicios : obtiene todos los servicios. GET /api/servicios?empresa=999
+     * : obtiene todos los servicios PENDIENTES de una empresa especifica Formato
+     * JSon Esperado: List<Servicio> GET /api/servicios?empresa=999&deudor=888:
+     * obtiene todos los servicios PENDIENTES de una empresa y un deudor Formato
+     * JSon Esperado: List<Servicio> GET
+     * /api/servicios?empresa=999&deudor=888&historico=true: obtiene todos los
+     * servicios de una empresa y un deudor(pagados, anulados o pendientes, o sea
+     * todos) GET /api/servicios?codigo=AAAAAAA : obtiene un servicio en particular
+     * usando el codigo de Barras.
+     */
+
+    // LISTA los que son de la empresa y son pendientes.
+    @GetMapping("/api/servicios")
+    public ResponseEntity<List<Servicio>> listarServicios(@RequestParam(name = "empresa", required = false) Integer empresa, @RequestParam(name = "deudor", required = false) Integer deudor) {
+        List<Servicio> servicios = new ArrayList<>();
+
+        if (empresa == null)
+            servicios = servicioService.listarServicios();
+        else {
+
+            // LISTA los que son de la empresa y son pendientes.
+            servicios = servicioService.listarServiciosPendientesPorEmpresaId(empresa);
+        }
+
+        return ResponseEntity.ok(servicios);
     }
 }
