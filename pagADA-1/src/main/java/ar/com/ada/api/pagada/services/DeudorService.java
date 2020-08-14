@@ -1,6 +1,7 @@
 package ar.com.ada.api.pagada.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class DeudorService {
         deudor.setNombre(nombre);
 
         deudorRepo.save(deudor);
+        if (deudor.getDeudorId() == null) {
+            return null;
+        }
         return deudor;
 
     }
@@ -63,5 +67,14 @@ public class DeudorService {
 
     public enum DeudorValidacionEnum {
         OK, ID_IMPOSITIVO_INVALIDO, NOMBRE_INVALIDO;
+    }
+
+    public Deudor buscarDeudorPorId(Integer deudorId) {
+        Optional<Deudor> oDeudor = deudorRepo.findById(deudorId);
+        if (oDeudor.isPresent()) {
+            return oDeudor.get();
+        } else {
+            return null;
+        }
     }
 }

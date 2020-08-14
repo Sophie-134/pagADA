@@ -35,6 +35,8 @@ public class Servicio {
     private String codigoBarras;
     @Column(name = "estado_id")
     private EstadoEnum estadoId;
+    private String numero;
+    private String moneda;
 
     // Owner de la relacion
     @OneToOne(mappedBy = "servicio", cascade = CascadeType.ALL)
@@ -138,6 +140,22 @@ public class Servicio {
     public void setPago(Pago pago) {
         this.pago = pago; // le pongo el pago al servicio
         pago.setServicio(this); // Le pongo el servicio al pago
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
     }
 
 }
