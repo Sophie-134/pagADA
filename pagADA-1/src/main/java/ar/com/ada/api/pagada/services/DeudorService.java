@@ -33,21 +33,35 @@ public class DeudorService {
 
     }
 
-    public DeudorValidacionEnum validarDeudor(Deudor deudor) {
-        if (deudor.getIdImpositivo() == null) {
+    // Evitar pasar el model DeudorRequest que referencia a algo que pasa FRONT o
+    // desde afuera, hacia la capa Service
+    // Si se hace, usarlo con otro nombre o con otro tipo de funcionalidad.
+    // O sea este metodo evitarlo hacerlo asi:
+    // public DeudorValidacionEnum validarDeudorInfo(DeudorRequest req) {
+    // return validarDeudorInfo(req.paisId, req.tipoIdImpositivo, req.idImpositivo,
+    // req.nombre);
+    // }
+    public DeudorValidacionEnum validarDeudorInfo(Integer paisId, TipoIdImpositivoEnum tipoIdImpositivo,
+            String idImpositivo, String nombre) {
+        if (idImpositivo == null) {
             return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
         }
-        if (!(deudor.getIdImpositivo().length() >= 11 && deudor.getIdImpositivo().length() <= 20)) {
+        if (!(idImpositivo.length() >= 11 && idImpositivo.length() <= 20)) {
             return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
         }
-        if (deudor.getIdImpositivo().chars().filter(c -> !Character.isDigit(c)).count() > 0) {
+        if (idImpositivo.chars().filter(c -> !Character.isDigit(c)).count() > 0) {
             return DeudorValidacionEnum.ID_IMPOSITIVO_INVALIDO;
         }
+        if (nombre == null)
+            return DeudorValidacionEnum.NOMBRE_INVALIDO;
+
+        if (nombre.length() > 100)
+            return DeudorValidacionEnum.NOMBRE_INVALIDO;
 
         return DeudorValidacionEnum.OK;
     }
 
     public enum DeudorValidacionEnum {
-        OK, ID_IMPOSITIVO_INVALIDO;
+        OK, ID_IMPOSITIVO_INVALIDO, NOMBRE_INVALIDO;
     }
 }

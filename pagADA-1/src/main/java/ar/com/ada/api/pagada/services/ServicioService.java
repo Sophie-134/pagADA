@@ -9,7 +9,7 @@ import ar.com.ada.api.pagada.entities.TipoServicio;
 import ar.com.ada.api.pagada.repos.TipoServicioRepository;
 
 @Service
-public class TipoServicioService {
+public class ServicioService {
 
     @Autowired
     TipoServicioRepository tipoRepo;
@@ -18,8 +18,13 @@ public class TipoServicioService {
         return tipoRepo.findAll();
     }
 
-    public void grabar(TipoServicio tipoServicio) {
-      
+    public boolean grabar(TipoServicio tipoServicio) {
+        if (tipoRepo.existsById(tipoServicio.getTipoServicioId())){
+            return false;
+        
+        }        
         tipoRepo.save(tipoServicio);
+
+        return true;
     }
 }

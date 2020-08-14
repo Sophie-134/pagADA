@@ -35,17 +35,20 @@ public class DeudorController {
     @PostMapping("/api/deudores")
     public ResponseEntity<GenericResponse> crearEmpresa(@RequestBody DeudorRequest deudorReq) {
         GenericResponse gr = new GenericResponse();
-        Deudor deudor = new Deudor();
 
-        // to do: hacer validaciones y crear la empresa a traves del servic
-        deudorService.crearDeudor(deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo,
+        // Validacion
+        DeudorValidacionEnum resultadoValidacion = deudorService.validarDeudorInfo(deudorReq.paisId,
+                deudorReq.tipoIdImpositivo, deudorReq.idImpositivo, deudorReq.nombre);
+        if (resultadoValidacion != DeudorValidacionEnum.OK) {
+            gr.isOk = false;
+            gr.message = "No se pudo validar el deudor " + resultadoValidacion.toString();
+
+            return ResponseEntity.badRequest().body(gr); // http 400
+        }
+        Deudor deudor = deudorService.crearDeudor(deudorReq.paisId, deudorReq.tipoIdImpositivo, deudorReq.idImpositivo,
                 deudorReq.nombre);
 
-        // O haciendo esto
-        // Empresa empresa = empresaService.crearEmpresa(empR.paisId,
-        // empR.tipoIdImpositivo, empR.idImpositivo, empR.nombre);
-
-        if (deudor.getDeudorId() != null) {
+        if (deudor != null) {
             gr.isOk = true;
             gr.id = deudor.getDeudorId();
             gr.message = "Deudor creado con exito";

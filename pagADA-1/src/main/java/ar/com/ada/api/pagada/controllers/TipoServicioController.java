@@ -11,20 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ar.com.ada.api.pagada.entities.TipoServicio;
 import ar.com.ada.api.pagada.models.response.GenericResponse;
-import ar.com.ada.api.pagada.services.TipoServicioService;
+import ar.com.ada.api.pagada.services.ServicioService;
 
 @RestController
 public class TipoServicioController {
     @Autowired
-    TipoServicioService tipoService;
+    ServicioService servicioService;
 
     @GetMapping("/api/tipo-servicios")
     public ResponseEntity<List<TipoServicio>> listarTipoServicios() {
         List<TipoServicio> tipoServicios;
-        // to do :obtener lista de empresas a atravez del service y lo guardamos en la
-        // varable empresas
-
-        tipoServicios = tipoService.listarTipoServicios();
+        
+        tipoServicios = servicioService.listarTipoServicios();
         return ResponseEntity.ok(tipoServicios);
 }
 @PostMapping("/api/tipo-servicios")
@@ -35,7 +33,7 @@ public class TipoServicioController {
         tipoServicio.setTipoServicioId(TipoServicioId);
         tipoServicio.setNombre(nombre);
 
-        tipoService.grabar(tipoServicio);
+        servicioService.grabar(tipoServicio);
 
         if (tipoServicio.getTipoServicioId() != null) {
             gr.isOk = true;
