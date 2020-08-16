@@ -16,5 +16,15 @@ public interface ServicioRepository extends JpaRepository<Servicio, Integer> {
 
     @Query("Select s from Servicio s where s.empresa.empresaId = :empresaId and s.estadoId = 0") //JPQL, en este caso, 0 es PENDIENTE
     List<Servicio> findAllPendientesEmpresaId(Integer empresaId);
-    
+
+    @Query("Select s from Servicio s where s.empresa.empresaId = :empresaId and s.deudor.deudorId = :deudorId and s.estadoId = 0") 
+ 	List<Servicio> findAllPendientesEmpresaIdDeudorId(Integer empresaId, Integer deudorId);
+
+     @Query("Select s from Servicio s where s.empresa.empresaId = :empresaId and s.deudor.deudorId = :deudorId")
+	List<Servicio> findAllHistoricoEmpresaIdDeudorId(Integer empresaId, Integer deudorId);
+
+    @Query("Select s from Servicio s where s.codigoBarras = :codigoBarras")
+	List<Servicio> findByCodigoBarras(String codigoBarras);
+
+
 }

@@ -75,14 +75,14 @@ public class ServicioController {
         if (servicio.getServicioId() == null) {
             genericResponse.isOk = false;
             genericResponse.message = "No se pudo crear el servicio";
-           
+
             return ResponseEntity.badRequest().body(genericResponse);
 
         } else {
             genericResponse.isOk = true;
             genericResponse.id = servicio.getServicioId();
             genericResponse.message = "Se creó el servicio éxitosamente.";
-            
+
             return ResponseEntity.ok(genericResponse);
         }
 
@@ -102,15 +102,24 @@ public class ServicioController {
 
     // LISTA los que son de la empresa y son pendientes.
     @GetMapping("/api/servicios")
-    public ResponseEntity<List<Servicio>> listarServicios(@RequestParam(name = "empresa", required = false) Integer empresa, @RequestParam(name = "deudor", required = false) Integer deudor) {
+    public ResponseEntity<List<Servicio>> listarServicios(@RequestParam(name = "empresa", required = false) Integer empresa, @RequestParam(name = "deudor", required = false) Integer deudor, @RequestParam(name="historico", required =false) boolean historico, @RequestParam(name = "codigoBarras", required = false) String codigoBarras) {
         List<Servicio> servicios = new ArrayList<>();
 
         if (empresa == null)
             servicios = servicioService.listarServicios();
-        else {
 
+        else if(deudor == null){
             // LISTA los que son de la empresa y son pendientes.
             servicios = servicioService.listarServiciosPendientesPorEmpresaId(empresa);
+        
+        } else if(historico == false){
+           servicios = servicioService.listarServiciosPendientesPorEmpresaIdDeudorId(empresa, deudor);
+       
+        } else if (historico == true){
+           servicios = servicioService.listarHistoricoPorEmpresaIdDeudorId(empresa, deudor);
+
+        }else{
+            servicios = servicioService.listarDeudorIdPorCodigoBarras(codigoBarras);
         }
 
         return ResponseEntity.ok(servicios);

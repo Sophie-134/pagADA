@@ -24,12 +24,12 @@ public class ServicioService {
         return tipoRepo.findAll();
     }
 
-    public boolean grabar(TipoServicio tipoServicio) {
-        if (tipoRepo.existsById(tipoServicio.getTipoServicioId())) {
+    public boolean crearTipoServicio(TipoServicio tipoS) {
+        if (tipoRepo.existsById(tipoS.getTipoServicioId())) {
             return false;
 
         }
-        tipoRepo.save(tipoServicio);
+        tipoRepo.save(tipoS);
 
         return true;
     }
@@ -92,4 +92,16 @@ public class ServicioService {
     public List<Servicio> listarServiciosPendientesPorEmpresaId(Integer empresaId) {
         return servicioRepo.findAllPendientesEmpresaId(empresaId);
     }
+
+	public List<Servicio> listarServiciosPendientesPorEmpresaIdDeudorId(Integer empresaId, Integer deudorId) {
+		return servicioRepo.findAllPendientesEmpresaIdDeudorId(empresaId, deudorId);
+	}
+
+	public List<Servicio> listarHistoricoPorEmpresaIdDeudorId(Integer empresaId, Integer deudorId) {
+		return servicioRepo.findAllHistoricoEmpresaIdDeudorId(empresaId, deudorId);
+	}
+
+	public List<Servicio> listarDeudorIdPorCodigoBarras(String codigoBarras) {
+		return servicioRepo.findByCodigoBarras(codigoBarras);
+	}
 }

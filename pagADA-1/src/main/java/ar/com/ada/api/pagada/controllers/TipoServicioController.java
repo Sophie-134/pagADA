@@ -26,18 +26,14 @@ public class TipoServicioController {
         return ResponseEntity.ok(tipoServicios);
 }
 @PostMapping("/api/tipo-servicios")
-    public ResponseEntity<GenericResponse> crearTipoServicio(@RequestBody Integer TipoServicioId, String nombre) {
+    public ResponseEntity<GenericResponse> crearTipoServicio(@RequestBody TipoServicio tipoS) {
         GenericResponse gr = new GenericResponse();
-        TipoServicio tipoServicio = new TipoServicio();
+        
+        boolean tipoServicio = servicioService.crearTipoServicio(tipoS);
 
-        tipoServicio.setTipoServicioId(TipoServicioId);
-        tipoServicio.setNombre(nombre);
-
-        servicioService.grabar(tipoServicio);
-
-        if (tipoServicio.getTipoServicioId() != null) {
+        if (tipoServicio) {
             gr.isOk = true;
-            gr.id = tipoServicio.getTipoServicioId();
+            gr.id = tipoS.getTipoServicioId();
             gr.message = "tipo-servicio creado";
             return ResponseEntity.ok(gr);
         }
