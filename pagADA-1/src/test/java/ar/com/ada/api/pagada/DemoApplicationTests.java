@@ -1,4 +1,5 @@
 package ar.com.ada.api.pagada;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,7 +8,13 @@ import ar.com.ada.api.pagada.services.DeudorService.DeudorValidacionEnum;
 import ar.com.ada.api.pagada.entities.*;
 import ar.com.ada.api.pagada.services.EmpresaService.EmpresaValidacionEnum;
 import ar.com.ada.api.pagada.entities.Pais.*;
+import ar.com.ada.api.pagada.entities.Servicio.EstadoEnum;
+import ar.com.ada.api.pagada.entities.Servicio.TipoComprobanteEnum;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 @SpringBootTest
 class DemoApplicationTests {
@@ -16,6 +23,9 @@ class DemoApplicationTests {
 	EmpresaService empresaService;
 	@Autowired
 	DeudorService deudorService;
+	@Autowired
+	ServicioService servicioService;
+
 	// Pedidos originalmente para empresas:
 	// Test1: que valide el Id Impositivo con valores correctos
 	// Test2: que valide el Id Impositivo con valores incorrectos
@@ -152,5 +162,74 @@ class DemoApplicationTests {
 		assertEquals("*789", infoOfuscada);
 	}
 
+/*
+	 * 6) Anular un servicio: DELETE /api/servicios/{id} : debe poner en estado
+	 * ANULADO a un servicio.
+	 * 
+	 * Hacer un Test qeu valide que cuando se "anule" un servicio mediante el
+	 * service, verificar en la base de datos que haya sido realmente anulado.
+	 */
+
+	@Test
+	void Servicio_Anulado() {
+
+		// Como estamos en base de datos en memoria, para tener un Servicio a ANular,
+		// tenemos que:
+		// 1. Crear una empresa(INSTANCIAR Y GRABARLA EN LA DB)
+		// 2. Crear un Deudor(instanciar y grabarlo en la db)
+		// 3. Instanciar un servicio y ponerle valores buenos para que se pueda anular
+		// 4. Grabar el servicio
+		// 5. Anular el servicio
+		// 6. Grabar el servicio anulado
+		// 7. Buscar el servicio, por ID
+		// 8. verificar con "assert" que el estado sea anulado
+
+		// 1.
+		Empresa empresa = new Empresa();
+		empresa.setPaisId(32);
+		empresa.setTipoIdImpositivo(TipoIdImpositivoEnum.CUIT);
+		empresa.setIdImpositivo("4337373425478788");
+		empresa.setNombre("ADA TESTIN EMPRESA");
+
+
+		empresaService.crearEmpresa(empresa);
+
+		// 2.
+		Deudor deudor = deudorService.crearDeudor(32, TipoIdImpositivoEnum.CUIL, "45987845695388", "Santi Santi");
+
+		//2.5
+		TipoServicio tipoServicio = new TipoServicio();
+		tipoServicio.setTipoServicioId(10);
+		tipoServicio.setNombre("AGUA");
+		//servicioService.buscarTipoServicioPorId(10);
+		// 3.
+		Servicio servicio = new Servicio();
+
+		servicio.setEmpresa(empresa);
+		servicio.setDeudor(deudor);
+		servicio.setTipoServicio(tipoServicio);
+		servicio.setTipoComprobante(TipoComprobanteEnum.IMPUESTO);
+		servicio.setNumero("234526841569");
+		servicio.setFechaEmision(new Date());
+		servicio.setFechaVencimiento(new Date());
+		servicio.setImporte(new BigDecimal(2000));
+		servicio.setMoneda("ARS");
+		servicio.setCodigoBarras("123456789");
+		servicio.setEstadoId(EstadoEnum.PENDIENTE);
+		// 4.
+		servicioService.crearServicio(servicio);
+
+		Integer servicioId = servicio.getServicioId();
+		// 5.
+		servicio.setEstadoId(EstadoEnum.ANULADO);
+		// 6.
+		servicioService.grabar(servicio);
+
+		// 7.
+		Servicio servicioBaseDatos = servicioService.buscarServicioPorId(servicioId);
+
+		// 8.
+		assertTrue(servicioBaseDatos.getEstadoId() == EstadoEnum.ANULADO);
+	}
 
 }
