@@ -58,16 +58,18 @@ public class ServicioService {
     }
 
     public Servicio crearServicio(Servicio servicio) {
-        // Si agreggo validacion justo antes de la creacion
-        if (this.validarServicio(servicio) != ServicioValidacionEnum.OK)
-            return servicio;
-
-        return servicioRepo.save(servicio);
+        return grabar(servicio);
 
     }
-    public void grabar(Servicio servicio) {
-        servicioRepo.save(servicio);
-	}
+    public Servicio grabar(Servicio servicio) {
+           // Si agreggo validacion justo antes de la creacion
+           if (this.validarServicio(servicio) != ServicioValidacionEnum.OK){
+           return servicio;
+           }
+       return servicioRepo.save(servicio);
+
+   }
+
 
     public TipoServicio buscarTipoServicioPorId(Integer tipoServicioId) {
         Optional<TipoServicio> oTipoServicio = tipoRepo.findById(tipoServicioId);

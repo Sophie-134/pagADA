@@ -262,19 +262,30 @@ public class ServicioController {
         // actualizar propiedades
         // grabarlo
 
-        //    GenericResponse r = new GenericResponse();
+        GenericResponse response = new GenericResponse();
         Servicio servicio = servicioService.buscarServicioPorId(id);
         
         //    // To do: instanciarlo
         //    // grabarlo en la db a traves del service.
         servicio.setImporte(actualizarS.importe);
         servicio.setFechaVencimiento(actualizarS.vencimiento);
-         
+        
+          //Agrego validacion adicional, mas alla de ue la hago en grabar.
+          ServicioValidacionEnum servicioVResultado;
+          servicioVResultado = servicioService.validarServicio(servicio);
+  
+          if (servicioVResultado != ServicioValidacionEnum.OK) {
+              response.isOk = false;
+              response.message = "Hubo un error en la validacion del servicio " + servicioVResultado;
+  
+              return ResponseEntity.badRequest().body(response); // Error http 400
+          }
+  
         servicioService.grabar(servicio);
 
         //    return ResponseEntity.ok(r);
         //}
-        GenericResponse response = new GenericResponse();
+        
         response.isOk = true;
         response.message = "Servicio actualizado!";
         response.id = servicio.getServicioId();
