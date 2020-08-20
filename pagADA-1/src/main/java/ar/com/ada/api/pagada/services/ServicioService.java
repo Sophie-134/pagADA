@@ -42,6 +42,7 @@ public class ServicioService {
 
         return true;
     }
+   
 
     public ServicioValidacionEnum validarServicio(Servicio servicio) {
 
@@ -64,6 +65,9 @@ public class ServicioService {
         return servicioRepo.save(servicio);
 
     }
+    public void grabar(Servicio servicio) {
+        servicioRepo.save(servicio);
+	}
 
     public TipoServicio buscarTipoServicioPorId(Integer tipoServicioId) {
         Optional<TipoServicio> oTipoServicio = tipoRepo.findById(tipoServicioId);

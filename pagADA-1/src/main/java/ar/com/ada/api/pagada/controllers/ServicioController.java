@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import ar.com.ada.api.pagada.entities.*;
+import ar.com.ada.api.pagada.models.request.ActualizarServicioRequest;
 import ar.com.ada.api.pagada.models.request.InfoPagoRequest;
 import ar.com.ada.api.pagada.models.request.ServicioRequest;
 import ar.com.ada.api.pagada.models.response.GenericResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -159,6 +161,19 @@ public class ServicioController {
      * ResponseEntity.ok(servicioService.PendientesPorEmpresaIdYDeudorId(empresaId,
      * deudorId));
      */
+        //Version Alexmary
+        // Version Alexmary
+        /*if (codigo != null) {
+            servicios = servicioService.listarPorCodigoBarras(codigo);
+        } else if (empresa != null && deudor == null) {
+            servicios = servicioService.listarServiciosPendientesPorEmpresaId(empresa);
+        } else if (empresa != null && deudor != null && !historico) {
+            servicios = servicioService.PendientesPorEmpresaIdYDeudorId(empresa, deudor);
+        } else if (empresa != null && deudor != null && historico) {
+            servicios = servicioService.historicoPorEmpresaIdYDeudorId(empresa, deudor);
+        } else {
+            servicios = servicioService.listarServicios();
+        }*/
 
     @PostMapping("/api/servicios/{id}")
     public ResponseEntity<GenericResponse> pagarServicio(@PathVariable Integer id, @RequestBody InfoPagoRequest pago) {
@@ -240,4 +255,30 @@ public class ServicioController {
 
     // return ResponseEntity.ok(r);
     // }
+    @PutMapping("/api/servicios/{id}")
+    public ResponseEntity<GenericResponse> actualizarServicio(@PathVariable Integer id,
+            @RequestBody ActualizarServicioRequest actualizarS) {
+        // Buscar el servicio
+        // actualizar propiedades
+        // grabarlo
+
+        //    GenericResponse r = new GenericResponse();
+        Servicio servicio = servicioService.buscarServicioPorId(id);
+        
+        //    // To do: instanciarlo
+        //    // grabarlo en la db a traves del service.
+        servicio.setImporte(actualizarS.importe);
+        servicio.setFechaVencimiento(actualizarS.vencimiento);
+         
+        servicioService.grabar(servicio);
+
+        //    return ResponseEntity.ok(r);
+        //}
+        GenericResponse response = new GenericResponse();
+        response.isOk = true;
+        response.message = "Servicio actualizado!";
+        response.id = servicio.getServicioId();
+
+        return ResponseEntity.ok(response);
+    }
 }
