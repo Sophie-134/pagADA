@@ -15,6 +15,7 @@ import ar.com.ada.api.pagada.entities.TipoServicio;
 import ar.com.ada.api.pagada.entities.OperacionPago.OperacionPagoEnum;
 import ar.com.ada.api.pagada.entities.Pago.MedioPagoEnum;
 import ar.com.ada.api.pagada.entities.Servicio.EstadoEnum;
+import ar.com.ada.api.pagada.repos.PagoRepository;
 import ar.com.ada.api.pagada.repos.ServicioRepository;
 import ar.com.ada.api.pagada.repos.TipoServicioRepository;
 
@@ -25,6 +26,8 @@ public class ServicioService {
     TipoServicioRepository tipoRepo;
     @Autowired
     ServicioRepository servicioRepo;
+    @Autowired
+    PagoRepository pagoRepo;
 
     public List<TipoServicio> listarTipoServicios() {
         return tipoRepo.findAll();
@@ -171,5 +174,17 @@ public class ServicioService {
     public Servicio buscarServicioPorId(Integer servicioId) {
         return servicioRepo.findByServicioId(servicioId);
     }
+
+    public Pago buscarPagoPorId(Integer pagoId) {
+		return pagoRepo.findByPagoId(pagoId);
+	}
+
+	public List<Pago> buscarPagosPorEmpresaId(Integer empresaId) {
+		return pagoRepo.findPagosByEmpresaId(empresaId);
+	}
+
+	public List<Pago> buscarPagosPorDeudorId(Integer deudorId) {
+		return pagoRepo.findPagosByDeudorId(deudorId);
+	}
 
 }

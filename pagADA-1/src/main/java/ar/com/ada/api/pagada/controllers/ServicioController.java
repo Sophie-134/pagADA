@@ -118,10 +118,10 @@ public class ServicioController {
             // LISTA los que son de la empresa y son pendientes.
             servicios = servicioService.listarServiciosPendientesPorEmpresaId(empresa);
 
-        } else if (historico == false) {
+        } else if (!historico) {
             servicios = servicioService.listarServiciosPendientesPorEmpresaIdDeudorId(empresa, deudor);
 
-        } else if (historico == true) {
+        } else if (historico) {
             servicios = servicioService.listarHistoricoPorEmpresaIdDeudorId(empresa, deudor);
 
         } else {
